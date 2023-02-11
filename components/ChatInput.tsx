@@ -12,9 +12,11 @@ interface Props {
 export default function ChatInput({ id }: Props) {
   const { data: session } = useSession();
   const [prompt, setPrompt] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   const sendMessage = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setIsLoading(true);
     if (!prompt) return;
     const input = prompt.trim();
     setPrompt('');
@@ -41,17 +43,23 @@ export default function ChatInput({ id }: Props) {
         session,
       }),
     });
+
+    setIsLoading(false);
   };
 
   return (
-    <form className='relative mx-4 mt-auto rounded-md bg-[#40414F] py-3 pl-4 shadow' onSubmit={sendMessage}>
+    <form className='relative mx-4 mt-auto rounded-md bg-[#40414F] py-2.5 pl-4 shadow' onSubmit={sendMessage}>
       <textarea
         rows={1}
         className='w-full resize-none bg-transparent focus:outline-none'
         value={prompt}
         onChange={e => setPrompt(e.target.value)}
+        autoFocus
       ></textarea>
-      <button className='absolute top-1/2 right-4 -translate-y-1/2 rounded-md p-1 text-lg hover:bg-gray-900'>
+      <button
+        disabled={isLoading}
+        className='absolute top-1/2 right-4 -translate-y-1/2 rounded-md p-1 text-lg hover:bg-gray-900'
+      >
         <FiSend />
       </button>
     </form>
