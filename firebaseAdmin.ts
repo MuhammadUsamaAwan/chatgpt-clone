@@ -1,7 +1,11 @@
 import admin from 'firebase-admin';
-import { getApps } from 'firebase-admin/app';
+import { getApps, ServiceAccount } from 'firebase-admin/app';
 
-const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT_KEY!);
+const serviceAccount: ServiceAccount = {
+  projectId: process.env.FIREBASE_SERVICE_ACCOUNT_PROJECT_ID,
+  privateKey: process.env.FIREBASE_SERVICE_ACCOUNT_PRIVATE_KEY,
+  clientEmail: process.env.FIREBASE_SERVICE_ACCOUNT_CLIENT_EMAIL,
+};
 
 if (!getApps().length) {
   admin.initializeApp({

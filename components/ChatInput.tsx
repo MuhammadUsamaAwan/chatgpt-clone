@@ -4,6 +4,7 @@ import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
 import { useSession } from 'next-auth/react';
 import { FormEvent, useState } from 'react';
 import { FiSend } from 'react-icons/fi';
+import { toast } from 'react-hot-toast';
 
 interface Props {
   id: string;
@@ -17,6 +18,7 @@ export default function ChatInput({ id }: Props) {
   const sendMessage = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);
+    const notificaton = toast.loading('ChatGPT is thinking...');
     if (!prompt) return;
     const input = prompt.trim();
     setPrompt('');
@@ -29,7 +31,7 @@ export default function ChatInput({ id }: Props) {
         avatar: session?.user?.image || `http://ui-avatars.com/api/?name=${session?.user?.name}`,
       },
     };
-    await addDoc(collection(db, session?.user?.email!, 'chats', id, 'messages'), message);
+    await addDoc(collection(db, 'users', session?.user?.email!, 'chats', id, 'messages'), message);
 
     await fetch('/api/askQuestion', {
       method: 'POST',
@@ -42,20 +44,23 @@ export default function ChatInput({ id }: Props) {
         model: 'text-davinci-003',
         session,
       }),
-    });
+    }).then(() =>
+      toast.success('ChatGPT has responded!', {
+        id: notificaton,
+      })
+    );
 
     setIsLoading(false);
   };
 
   return (
-    <form className='relative mx-4 mt-auto rounded-md bg-[#40414F] py-2.5 pl-4 shadow' onSubmit={sendMessage}>
-      <textarea
-        rows={1}
+    <form className='relative mx-4 mt-auto rounded-md bg-[#40414F] py-3 pl-4 shadow' onSubmit={sendMessage}>
+      <input
         className='w-full resize-none bg-transparent focus:outline-none'
         value={prompt}
         onChange={e => setPrompt(e.target.value)}
         autoFocus
-      ></textarea>
+      />
       <button
         disabled={isLoading}
         className='absolute top-1/2 right-4 -translate-y-1/2 rounded-md p-1 text-lg hover:bg-gray-900'
