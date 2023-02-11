@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { BsPlus } from 'react-icons/bs';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
+import { addDoc, collection, Timestamp } from 'firebase/firestore';
 import { db } from '@/firebase';
 
 export default function NewChat() {
@@ -16,7 +16,7 @@ export default function NewChat() {
     const doc = await addDoc(collection(db, 'users', session?.user?.email!, 'chats'), {
       messages: [],
       userId: session?.user?.email!,
-      createdAt: serverTimestamp(),
+      createdAt: Timestamp.now(),
     });
     setIsLoading(false);
     router.push(`/chat/${doc.id}`);

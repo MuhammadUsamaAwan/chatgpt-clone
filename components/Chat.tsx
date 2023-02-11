@@ -31,8 +31,6 @@ export default function Chat({ id }: Props) {
     router.replace('/');
   };
 
-  console.log(data);
-
   return (
     <Link
       href={`/chat/${id}`}

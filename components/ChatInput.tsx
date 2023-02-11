@@ -1,6 +1,6 @@
 'use client';
 import { db } from '@/firebase';
-import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
+import { addDoc, collection, Timestamp } from 'firebase/firestore';
 import { useSession } from 'next-auth/react';
 import { FormEvent, useState } from 'react';
 import { FiSend } from 'react-icons/fi';
@@ -24,7 +24,7 @@ export default function ChatInput({ id }: Props) {
     setPrompt('');
     const message: Message = {
       text: input,
-      createdAt: serverTimestamp(),
+      createdAt: Timestamp.now(),
       user: {
         _id: session?.user?.email!,
         name: session?.user?.name!,
