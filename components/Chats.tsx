@@ -1,6 +1,6 @@
 'use client';
 import { db } from '@/firebase';
-import { collection, orderBy } from 'firebase/firestore';
+import { collection, orderBy, query } from 'firebase/firestore';
 import { useSession } from 'next-auth/react';
 import { useCollection } from 'react-firebase-hooks/firestore';
 import { ImSpinner7 } from 'react-icons/im';
@@ -9,9 +9,7 @@ import Chat from './Chat';
 export default function Chats() {
   const { data: session } = useSession();
   const [data, loading] = useCollection(
-    session && collection(db, 'users', session.user?.email!, 'chats'),
-    // @ts-ignore
-    orderBy('createdAt', 'desc')
+    session && query(collection(db, 'users', session.user?.email!, 'chats'), orderBy('createdAt', 'desc'))
   );
 
   if (loading)

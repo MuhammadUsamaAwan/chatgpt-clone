@@ -1,10 +1,9 @@
 'use client';
 import Link from 'next/link';
 import { MdChatBubbleOutline } from 'react-icons/md';
-import { AiOutlineEdit } from 'react-icons/ai';
 import { FiTrash2 } from 'react-icons/fi';
 import { usePathname, useRouter } from 'next/navigation';
-import { deleteDoc, doc, limit, collection, orderBy } from 'firebase/firestore';
+import { deleteDoc, doc, limit, collection, orderBy, query } from 'firebase/firestore';
 import { useCollection } from 'react-firebase-hooks/firestore';
 import { useSession } from 'next-auth/react';
 import { db } from '@/firebase';
@@ -18,16 +17,21 @@ export default function Chat({ id }: Props) {
   const pathname = usePathname();
   const router = useRouter();
 
-  const [data, loading] = useCollection(
-    session && collection(db, 'users', session.user?.email!, 'chats', id, 'messages'),
-    orderBy('createdAt', 'asc'), // @ts-ignore
-    limit(1)
+  const [data] = useCollection(
+    session &&
+      query(
+        collection(db, 'users', session.user?.email!, 'chats', id, 'messages'),
+        orderBy('createdAt', 'asc'),
+        limit(1)
+      )
   );
 
   const deleteChat = async () => {
     await deleteDoc(doc(db, 'users', session?.user?.email!, 'chats', id));
     router.replace('/');
   };
+
+  console.log(data);
 
   return (
     <Link
@@ -38,7 +42,7 @@ export default function Chat({ id }: Props) {
     >
       <MdChatBubbleOutline className='text-base' />
 
-      <span className='flex-1 truncate text-sm'>{data?.docs[0]?.data().text || 'New Chat'}</span>
+      <span className='flex-1 truncate text-sm'>{data?.docs.at(0)?.data().text || 'New Chat'}</span>
       {pathname === `/chat/${id}` && (
         <button className='text-base' onClick={deleteChat}>
           <FiTrash2 />
