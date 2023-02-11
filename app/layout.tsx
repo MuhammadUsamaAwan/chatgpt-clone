@@ -16,9 +16,9 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           {!session ? (
             <Login />
           ) : (
-            <main className='flex'>
+            <main className='flex bg-[#343541] text-white'>
               <Sidebar />
-              <div className='flex-1 bg-[#343541]'>{children}</div>
+              <div className='flex-1'>{children}</div>
             </main>
           )}
         </SessionProvider>
