@@ -11,7 +11,7 @@ export default function ModelsSelect() {
 
   return (
     <ReactSelect
-      className='mx-2 rounded-md text-sm'
+      className='rounded-md text-sm'
       isSearchable
       isLoading={isLoading}
       menuPosition='fixed'
@@ -20,7 +20,7 @@ export default function ModelsSelect() {
         option: () => 'bg-[#202123] hover:bg-gray-500/10 rounded-md',
         placeholder: () => 'text-white',
         menuList: () => 'bg-[#202123]',
-        singleValue: () => 'text-white hidden sm:block',
+        singleValue: () => 'text-white',
       }}
       placeholder={model}
       defaultValue={model}

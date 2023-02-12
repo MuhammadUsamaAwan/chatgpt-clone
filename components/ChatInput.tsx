@@ -7,6 +7,7 @@ import { FiSend } from 'react-icons/fi';
 import { toast } from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
 import useSWR from 'swr';
+import ModelsSelect from './ModelsSelect';
 
 interface Props {
   id?: string;
@@ -101,19 +102,24 @@ export default function ChatInput({ id }: Props) {
   };
 
   return (
-    <form className='relative mx-4 mt-auto rounded-md bg-[#40414F] py-3 pl-4 shadow' onSubmit={sendMessage}>
-      <input
-        className='w-full resize-none bg-transparent focus:outline-none'
-        value={prompt}
-        onChange={e => setPrompt(e.target.value)}
-        autoFocus
-      />
-      <button
-        disabled={isLoading}
-        className='absolute top-1/2 right-4 -translate-y-1/2 rounded-md p-1 text-lg hover:bg-gray-900'
-      >
-        <FiSend />
-      </button>
-    </form>
+    <div className='mx-4 mt-auto space-y-2'>
+      <form className='relative rounded-md bg-[#40414F] py-3 pl-4 shadow' onSubmit={sendMessage}>
+        <input
+          className='w-full resize-none bg-transparent focus:outline-none'
+          value={prompt}
+          onChange={e => setPrompt(e.target.value)}
+          autoFocus
+        />
+        <button
+          disabled={isLoading}
+          className='absolute top-1/2 right-4 -translate-y-1/2 rounded-md p-1 text-lg hover:bg-gray-900'
+        >
+          <FiSend />
+        </button>
+      </form>
+      <div className='block sm:hidden'>
+        <ModelsSelect />
+      </div>
+    </div>
   );
 }
