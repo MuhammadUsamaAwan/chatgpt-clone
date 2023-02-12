@@ -6,12 +6,12 @@ const fetchModels = () => fetch('/api/getModels').then(res => res.json());
 export default function ModelsSelect() {
   const { data, isLoading } = useSWR('models', fetchModels);
   const { data: model, mutate: setModel } = useSWR('model', {
-    fallbackData: 'text-davinci-300',
+    fallbackData: 'text-davinci-003',
   });
 
   return (
     <ReactSelect
-      className='mx-2 rounded-md text-sm'
+      className='mx-2 rounded-md bg-transparent text-sm'
       isSearchable
       isLoading={isLoading}
       menuPosition='fixed'
@@ -20,7 +20,7 @@ export default function ModelsSelect() {
         option: () => 'bg-[#202123] hover:bg-gray-500/10 rounded-md',
         placeholder: () => 'text-white',
         menuList: () => 'bg-[#202123]',
-        singleValue: () => 'text-white bg-transparent hidden sm:block',
+        singleValue: () => 'text-white hidden sm:block',
       }}
       placeholder={model}
       defaultValue={model}

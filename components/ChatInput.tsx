@@ -18,7 +18,7 @@ export default function ChatInput({ id }: Props) {
   const [prompt, setPrompt] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const { data: model } = useSWR('model', {
-    fallbackData: 'text-davinci-300',
+    fallbackData: 'text-davinci-003',
   });
 
   const sendMessage = async (e: FormEvent<HTMLFormElement>) => {
@@ -28,7 +28,7 @@ export default function ChatInput({ id }: Props) {
     if (!prompt) return;
     const input = prompt.trim();
     setPrompt('');
-    const message: Message = {
+    let message: Message = {
       text: input,
       createdAt: Timestamp.now(),
       user: {
@@ -39,18 +39,26 @@ export default function ChatInput({ id }: Props) {
     };
     if (id) {
       await addDoc(collection(db, 'users', session?.user?.email!, 'chats', id, 'messages'), message);
-      await fetch('/api/askQuestion', {
+      const data = await fetch('/api/askQuestion', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           prompt: input,
-          chatId: id,
-          model: 'text-davinci-003',
-          session,
+          model,
         }),
-      }).then(() =>
+      }).then(res => res.json());
+      message = {
+        text: data.answer,
+        createdAt: Timestamp.now(),
+        user: {
+          _id: 'ChatGPT',
+          name: 'ChatGPT',
+          avatar: null,
+        },
+      };
+      await addDoc(collection(db, 'users', session?.user?.email!, 'chats', id, 'messages'), message).then(() =>
         toast.success('ChatGPT has responded!', {
           id: notificaton,
         })
@@ -63,18 +71,26 @@ export default function ChatInput({ id }: Props) {
         createdAt: Timestamp.now(),
       });
       await addDoc(collection(db, 'users', session?.user?.email!, 'chats', doc.id, 'messages'), message);
-      await fetch('/api/askQuestion', {
+      const data = await fetch('/api/askQuestion', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           prompt: input,
-          chatId: id,
           model,
-          session,
         }),
-      }).then(() =>
+      }).then(res => res.json());
+      message = {
+        text: data.answer,
+        createdAt: Timestamp.now(),
+        user: {
+          _id: 'ChatGPT',
+          name: 'ChatGPT',
+          avatar: null,
+        },
+      };
+      await addDoc(collection(db, 'users', session?.user?.email!, 'chats', doc.id, 'messages'), message).then(() =>
         toast.success('ChatGPT has responded!', {
           id: notificaton,
         })
