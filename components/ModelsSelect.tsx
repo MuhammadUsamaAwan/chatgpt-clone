@@ -11,7 +11,7 @@ export default function ModelsSelect() {
 
   return (
     <ReactSelect
-      className='mx-2 rounded-md bg-transparent text-sm'
+      className='mx-2 rounded-md text-sm'
       isSearchable
       isLoading={isLoading}
       menuPosition='fixed'
