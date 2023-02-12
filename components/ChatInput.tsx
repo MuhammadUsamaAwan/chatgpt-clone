@@ -6,6 +6,7 @@ import { FormEvent, useState } from 'react';
 import { FiSend } from 'react-icons/fi';
 import { toast } from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
+import useSWR from 'swr';
 
 interface Props {
   id?: string;
@@ -16,6 +17,9 @@ export default function ChatInput({ id }: Props) {
   const { data: session } = useSession();
   const [prompt, setPrompt] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const { data: model } = useSWR('model', {
+    fallbackData: 'text-davinci-300',
+  });
 
   const sendMessage = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -67,7 +71,7 @@ export default function ChatInput({ id }: Props) {
         body: JSON.stringify({
           prompt: input,
           chatId: id,
-          model: 'text-davinci-003',
+          model,
           session,
         }),
       }).then(() =>
