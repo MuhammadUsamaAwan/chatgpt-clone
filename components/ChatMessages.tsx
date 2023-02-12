@@ -25,8 +25,6 @@ export default function ChatMessages({ id }: Props) {
       </div>
     );
 
-  console.log(data);
-
   return (
     <div className='flex-1 overflow-y-auto'>
       {data?.docs.map(message => (
