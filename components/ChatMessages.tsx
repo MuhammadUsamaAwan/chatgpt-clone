@@ -1,4 +1,5 @@
 'use client';
+import { useRef, useEffect } from 'react';
 import { db } from '@/firebase';
 import { collection, orderBy, query } from 'firebase/firestore';
 import { useSession } from 'next-auth/react';
@@ -11,12 +12,17 @@ interface Props {
 }
 
 export default function ChatMessages({ id }: Props) {
+  const ref = useRef<HTMLDivElement>(null);
   const { data: session } = useSession();
 
   const [data, isLoading] = useCollection(
     session &&
       query(collection(db, 'users', session?.user?.email!, 'chats', id, 'messages'), orderBy('createdAt', 'asc'))
   );
+
+  useEffect(() => {
+    ref.current?.scrollIntoView();
+  }, [data]);
 
   if (isLoading)
     return (
@@ -30,6 +36,7 @@ export default function ChatMessages({ id }: Props) {
       {data?.docs.map(message => (
         <Message key={message.id} message={message.data()} />
       ))}
+      <div ref={ref}></div>
     </div>
   );
 }
