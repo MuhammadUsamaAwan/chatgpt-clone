@@ -14,7 +14,7 @@ export default function Sidebar() {
         onClick={() => signOut()}
       >
         <MdLogout className='text-base' />
-        <span className='text-sm'>Log out</span>
+        <span className='hidden text-sm sm:inline-block'>Log out</span>
       </button>
     </div>
   );

@@ -40,7 +40,9 @@ export default function Chat({ id }: Props) {
     >
       <MdChatBubbleOutline className='text-base' />
 
-      <span className='flex-1 truncate text-sm'>{data?.docs.at(0)?.data().text || 'New Chat'}</span>
+      <span className='hidden flex-1 truncate text-sm sm:inline-block'>
+        {data?.docs.at(0)?.data().text || 'New Chat'}
+      </span>
       {pathname === `/chat/${id}` && (
         <button className='text-base' onClick={deleteChat}>
           <FiTrash2 />
